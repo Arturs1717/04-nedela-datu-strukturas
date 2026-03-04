@@ -1,12 +1,19 @@
 import sys
 from storage import load_list, save_list
+from utils import item_total, calculate_total, count_items
 
 
-def add_item(name, price):
+def add_item(name, quantity, price):
     items = load_list()
-    items.append({"name": name, "price": float(price)})
+
+    items.append({
+        "name": name,
+        "quantity": int(quantity),
+        "price": float(price)
+    })
+
     save_list(items)
-    print(f"✓ Pievienots: {name} ({price} EUR)")
+    print(f"✓ Pievienots: {name} ({quantity} x {price} EUR)")
 
 
 def list_items():
@@ -17,32 +24,48 @@ def list_items():
         return
 
     print("Iepirkumu saraksts:")
+
     for i, item in enumerate(items, start=1):
-        print(f"{i}. {item['name']} — {item['price']} EUR")
+        total = item_total(item["quantity"], item["price"])
+        print(f"{i}. {item['name']} ({item['quantity']} x {item['price']} EUR) = {total:.2f} EUR")
 
 
 def total_items():
     items = load_list()
-    total = sum(item["price"] for item in items)
-    print(f"Kopā: {total:.2f} EUR ({len(items)} produkti)")
+
+    total_price = calculate_total(items)
+    total_products = count_items(items)
+
+    print(f"Kopā produkti: {total_products}")
+    print(f"Kopējā summa: {total_price:.2f} EUR")
 
 
 def clear_items():
     save_list([])
-    print("Saraksts notīrīts")
+    print("Saraksts iztīrīts")
 
 
 def main():
     if len(sys.argv) < 2:
-        print("Komandas: add, list, total, clear")
+        print("Komandas:")
+        print(" add NAME QUANTITY PRICE")
+        print(" list")
+        print(" total")
+        print(" clear")
         return
 
     command = sys.argv[1]
 
     if command == "add":
+        if len(sys.argv) != 5:
+            print("Lietošana: add NAME QUANTITY PRICE")
+            return
+
         name = sys.argv[2]
-        price = sys.argv[3]
-        add_item(name, price)
+        quantity = sys.argv[3]
+        price = sys.argv[4]
+
+        add_item(name, quantity, price)
 
     elif command == "list":
         list_items()
@@ -52,6 +75,9 @@ def main():
 
     elif command == "clear":
         clear_items()
+
+    else:
+        print("Nezināma komanda")
 
 
 if __name__ == "__main__":

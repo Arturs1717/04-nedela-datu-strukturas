@@ -1,18 +1,12 @@
 [
   {
     "name": "Maize",
+    "quantity": 3,
     "price": 1.2
   },
   {
     "name": "Piens",
+    "quantity": 2,
     "price": 1.5
-  },
-  {
-    "name": "Maize",
-    "price": 3.0
-  },
-  {
-    "name": "Piens",
-    "price": 2.0
   }
 ]

@@ -17,3 +17,12 @@ def save_list(items):
     """Saglabā iepirkumu sarakstu JSON failā."""
     with open(FILE, "w", encoding="utf-8") as f:
         json.dump(items, f, indent=2, ensure_ascii=False)
+
+def load_prices():
+    import json
+
+    try:
+        with open("shopping_list/prices.json", "r", encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}        

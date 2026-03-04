@@ -1,15 +1,22 @@
 import sys
-from storage import load_list, save_list
+from storage import load_list, save_list, load_prices
 from utils import item_total, calculate_total, count_items
 
 
-def add_item(name, quantity, price):
+def add_item(name, quantity):
     items = load_list()
+    prices = load_prices()
+
+    if name not in prices:
+        print("Cena šim produktam nav datubāzē")
+        return
+
+    price = prices[name]
 
     items.append({
         "name": name,
         "quantity": int(quantity),
-        "price": float(price)
+        "price": price
     })
 
     save_list(items)
@@ -48,7 +55,7 @@ def clear_items():
 def main():
     if len(sys.argv) < 2:
         print("Komandas:")
-        print(" add NAME QUANTITY PRICE")
+        print(" add NAME QUANTITY")
         print(" list")
         print(" total")
         print(" clear")
@@ -57,15 +64,14 @@ def main():
     command = sys.argv[1]
 
     if command == "add":
-        if len(sys.argv) != 5:
-            print("Lietošana: add NAME QUANTITY PRICE")
+        if len(sys.argv) != 4:
+            print("Lietošana: add NAME QUANTITY")
             return
 
         name = sys.argv[2]
         quantity = sys.argv[3]
-        price = sys.argv[4]
 
-        add_item(name, quantity, price)
+        add_item(name, quantity)
 
     elif command == "list":
         list_items()
